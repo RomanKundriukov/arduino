@@ -1,53 +1,57 @@
+#include "ArduinoGraphics.h"
+#include "Arduino_LED_Matrix.h"
+
+ArduinoLEDMatrix matrix;
+
 const int sensorPin = A0;
-const float baselineTemp = 20.0;
 
 void setup() 
 {
   // put your setup code here, to run once:
   Serial.begin(9600);
 
-  for(int pinNumber = 2; pinNumber < 5; pinNumber++)
-  {
-    pinMode(pinNumber, OUTPUT);
-    digitalWrite(pinNumber, LOW);
-  }
+  matrix.begin();
 }
 
 void loop() 
 {
   // put your main code here, to run repeatedly:
-  int sensorVal = analogRead(sensorPin);
+  int sensorValue = analogRead(sensorPin);
 
-  Serial.print("Sensor Value: ");
-  Serial.print(sensorVal);
+  float voltage = (sensorValue / 1024.0) * 5.0;
 
-  float voltage = (sensorVal/1024.0) * 5.0;
+  float temperature = (voltage - 0.5) * 100;
 
-  Serial.print(", Volts: ");
-  Serial.print(voltage);
+  showTemperature(temperature);
 
-  Serial.print(", degress C: ");
-  float temperature = (voltage - .5) * 100;
-  Serial.println(temperature);
+  delay(500);
+}
 
-  if(temperature < baselineTemp + 2)
-  {
-    digitalWrite(2, LOW);
-    digitalWrite(3, LOW);
-    digitalWrite(4, LOW);
-  }
-  else if(temperature >= baselineTemp + 2 && temperature < baselineTemp + 4)
-  {
-    digitalWrite(2, HIGH);
-    digitalWrite(3, HIGH);
-    digitalWrite(4, LOW);
-  }
-  else if(temperature >= baselineTemp + 6)
-  {
-    digitalWrite(2, HIGH);
-    digitalWrite(3, HIGH);
-    digitalWrite(4, HIGH);
-  }
+void showTemperature(float temperature)
+{
+    // Temperatur auf eine ganze Zahl runden
+    int roundedTemperature = round(temperature);
 
-  delay(1);
+    // Beispiel: "23C"
+    char temperatureText[8];
+    snprintf(
+        temperatureText,
+        sizeof(temperatureText),
+        "%dC",
+        roundedTemperature
+    );
+
+    matrix.beginDraw();
+
+    // Vorherige Anzeige löschen
+    matrix.background(0x000000);
+    matrix.stroke(0xFFFFFF);
+
+    // Der kleine Font passt besser auf die 12x8-Matrix
+    matrix.textFont(Font_4x6);
+    matrix.beginText(0, 1, 0xFFFFFF);
+    matrix.print(temperatureText);
+    matrix.endText();
+
+    matrix.endDraw();
 }
