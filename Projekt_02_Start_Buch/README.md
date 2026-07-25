@@ -1,5 +1,9 @@
-Ein kleines Arduino-Projekt aus einem Arduino-Buch.
+# Meine erste Erfahrung mit Arduino
 
-Den Beispielcode sowie den interaktiven Schaltplan finden Sie unter folgendem Link:
+> Die grüne LED leuchtet dauerhaft. Beim Klick auf den Button leuchten die beiden roten LEDs abwechselnd in einer Schleife.
 
-https://app.cirkitdesigner.com/project/4a397fe4-ec38-4181-8c02-8f918bdc88f3?view=interactive_preview
+## Schaltplan
+![Schaltplan](/Assets/Schema.svg)
+
+## Beispiel
+![Beispiel](/Assets/Arduino_Buch_Projekt_2.gif)
